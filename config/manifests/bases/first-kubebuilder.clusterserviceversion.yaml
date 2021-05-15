@@ -1,0 +1,39 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[]'
+    capabilities: Basic Install
+  name: first-kubebuilder.v0.0.0
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions: {}
+  description: first operator description
+  displayName: first-operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      deployments: null
+    strategy: ""
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - kafka
+  links:
+  - name: First Kubebuilder
+    url: https://first-kubebuilder.domain
+  maturity: alpha
+  provider:
+    name: huzhi
+    url: github.com/lanzhiwang/first-operator
+  version: 0.0.0
