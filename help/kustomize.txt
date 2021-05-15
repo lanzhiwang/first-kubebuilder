@@ -1,0 +1,133 @@
+localhost:bin huzhi$ kustomize --help
+
+Manages declarative configuration of Kubernetes.
+See https://sigs.k8s.io/kustomize
+
+Usage:
+  kustomize [command]
+
+Available Commands:
+  build              Print configuration per contents of kustomization.yaml
+  create             Create a new kustomization in the current directory
+  edit               Edits a kustomization file
+  help               Help about any command
+  install-completion Install shell completion.
+  version            Prints the kustomize version
+
+Flags:
+  -h, --help   help for kustomize
+
+Additional help topics:
+  kustomize resources          [Alpha] To enable set KUSTOMIZE_ENABLE_ALPHA_COMMANDS=true
+
+Use "kustomize [command] --help" for more information about a command.
+localhost:bin huzhi$
+
+
+localhost:bin huzhi$ kustomize create --help
+Create a new kustomization in the current directory
+
+Usage:
+  kustomize create [flags]
+
+Examples:
+
+	# Create a new overlay from the base '../base".
+	kustomize create --resources ../base
+
+	# Create a new kustomization detecting resources in the current directory.
+	kustomize create --autodetect
+
+	# Create a new kustomization with multiple resources and fields set.
+	kustomize create --resources deployment.yaml,service.yaml,../base --namespace staging --nameprefix acme-
+
+
+Flags:
+      --annotations string   Add one or more common annotations.
+      --autodetect           Search for kubernetes resources in the current directory to be added to the kustomization file.
+  -h, --help                 help for create
+      --labels string        Add one or more common labels.
+      --nameprefix string    Sets the value of the namePrefix field in the kustomization file.
+      --namespace string     Set the value of the namespace field in the customization file.
+      --namesuffix string    Sets the value of the nameSuffix field in the kustomization file.
+      --recursive            Enable recursive directory searching for resource auto-detection.
+      --resources string     Name of a file containing a file to add to the kustomization file.
+localhost:bin huzhi$
+
+
+localhost:bin huzhi$ kustomize edit --help
+Edits a kustomization file
+
+Usage:
+  kustomize edit [command]
+
+Examples:
+
+	# Adds a configmap to the kustomization file
+	kustomize edit add configmap NAME --from-literal=k=v
+
+	# Sets the nameprefix field
+	kustomize edit set nameprefix <prefix-value>
+
+	# Sets the namesuffix field
+	kustomize edit set namesuffix <suffix-value>
+
+
+Available Commands:
+  add         Adds an item to the kustomization file.
+  fix         Fix the missing fields in kustomization file
+  remove      Removes items from the kustomization file.
+  set         Sets the value of different fields in kustomization file.
+
+Flags:
+  -h, --help   help for edit
+
+Use "kustomize edit [command] --help" for more information about a command.
+localhost:bin huzhi$
+
+
+
+localhost:bin huzhi$ kustomize build --help
+Print configuration per contents of kustomization.yaml
+
+Usage:
+  kustomize build {path} [flags]
+  kustomize build [command]
+
+Examples:
+
+To generate the resources specified in 'someDir/kustomization.yaml', run
+
+  kustomize build someDir
+
+The default argument to 'build' is '.' (the current working directory).
+
+The argument can be a URL resolving to a directory
+with a kustomization.yaml file, e.g.
+
+  kustomize build \
+    github.com/kubernetes-sigs/kustomize//examples/multibases/dev/?ref=v1.0.6
+
+The URL should be formulated as described at
+https://github.com/hashicorp/go-getter#url-format
+
+
+Available Commands:
+  alpha-inventory Print the inventory object which contains a list of all other objects
+
+Flags:
+      --enable_alpha_plugins     enable plugins, an alpha feature.
+                                 See https://github.com/kubernetes-sigs/kustomize/blob/master/docs/plugins/README.md
+
+  -h, --help                     help for build
+      --load_restrictor string   if set to 'LoadRestrictionsNone', local kustomizations may load files from outside their root. This does, however, break the relocatability of the kustomization. (default "LoadRestrictionsRootOnly")
+  -o, --output string            If specified, write the build output to this path.
+      --reorder string           Reorder the resources just before output. Use 'legacy' to apply a legacy reordering (Namespaces first, Webhooks last, etc). Use 'none' to suppress a final reordering. (default "legacy")
+
+Use "kustomize build [command] --help" for more information about a command.
+localhost:bin huzhi$
+
+
+
+
+

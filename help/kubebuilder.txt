@@ -1,0 +1,36 @@
+$ kubebuilder --help
+
+Development kit for building Kubernetes extensions and tools.
+
+Provides libraries and tools to create new projects, APIs and controllers.
+Includes tools for packaging artifacts into an installer container.
+
+Typical project lifecycle:
+
+- initialize a project:
+
+  kubebuilder init --domain example.com --license apache2 --owner "The Kubernetes authors"
+
+- create one or more a new resource APIs and add your code to them:
+
+  kubebuilder create api --group <group> --version <version> --kind <Kind>
+
+Create resource will prompt the user for if it should scaffold the Resource and / or Controller. To only scaffold a Controller for an existing Resource, select "n" for Resource. To only define the schema for a Resource without writing a Controller, select "n" for Controller.  创建资源将提示用户是否应搭建资源和/或控制器。 要仅为现有资源架设控制器，请为资源选择 “n”。要仅为资源定义架构而不编写控制器，请为控制器选择 “n”。
+
+After the scaffold is written, api will run make on the project.
+
+Usage:
+  kubebuilder [command]
+
+Available Commands:
+  create      Scaffold a Kubernetes API or webhook.
+  edit        This command will edit the project configuration
+  help        Help about any command
+  init        Initialize a new project
+  version     Print the kubebuilder version
+
+Flags:
+  -h, --help   help for kubebuilder
+
+Use "kubebuilder [command] --help" for more information about a command.
+$

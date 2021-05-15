@@ -1,0 +1,228 @@
+$ kubebuilder init --help
+Initialize a new project including vendor/ directory and Go package directories.
+
+Writes the following files:
+- a boilerplate license file
+- a PROJECT file with the project configuration
+- a Makefile to build the project
+- a go.mod with project dependencies
+- a Kustomization.yaml for customizating manifests
+- a Patch file for customizing image for manager manifests
+- a Patch file for enabling prometheus metrics
+- a cmd/manager/main.go to run
+
+project will prompt the user to run 'dep ensure' after writing the project files.
+
+Usage:
+  kubebuilder init [flags]
+
+Examples:
+# Scaffold a project using the apache2 license with "The Kubernetes authors" as owners
+kubebuilder init --domain example.org --license apache2 --owner "The Kubernetes authors"
+
+
+Flags:
+      --domain string            domain for groups (default "my.domain")
+      --fetch-deps               ensure dependencies are downloaded (default true)
+  -h, --help                     help for init
+      --license string           license to use to boilerplate, may be one of 'apache2', 'none' (default "apache2")
+      --owner string             owner to add to the copyright
+      --project-version string   project version (default "2")
+      --repo string              name to use for go module (e.g., github.com/user/repo), defaults to the go package of the current working directory.
+      --skip-go-version-check    if specified, skip checking the Go version
+$
+
+#########################################################
+
+$ mkdir first-operator
+
+$ cd first-operator
+
+$ pwd
+/Users/huzhi/work/code/go_code/rds/first-operator
+
+$ kubebuilder init --domain example.org --license apache2 --owner "The Kubernetes authors"
+2021/05/13 15:02:39 failed to initialize project: error finding current repository: could not determine repository path from module data, package data, or by initializing a module: go: cannot determine module path for source directory /Users/huzhi/work/code/go_code/rds/first-operator (outside GOPATH, module path must be specified)
+
+Example usage:
+	'go mod init example.com/m' to initialize a v0 or v1 module
+	'go mod init example.com/m/v2' to initialize a v2 module
+
+Run 'go help mod init' for more information.
+
+$ go mod init github.com/lanzhiwang/first-operator
+go: creating new go.mod: module github.com/lanzhiwang/first-operator
+
+$ ll
+total 8
+drwxr-xr-x  3 huzhi  staff   96  5 13 15:02 ./
+drwxr-xr-x  6 huzhi  staff  192  5 13 15:02 ../
+-rw-r--r--  1 huzhi  staff   53  5 13 15:02 go.mod
+
+$ kubebuilder init --domain example.org --license apache2 --owner "The Kubernetes authors"
+Writing scaffold for you to edit...
+Get controller runtime:
+$ go get sigs.k8s.io/controller-runtime@v0.5.0
+go: downloading sigs.k8s.io/controller-runtime v0.5.0
+go: downloading k8s.io/apimachinery v0.17.2
+go: downloading k8s.io/client-go v0.17.2
+go: downloading github.com/prometheus/client_golang v1.0.0
+go: downloading golang.org/x/time v0.0.0-20190308202827-9d24e82272b4
+go: downloading github.com/evanphx/json-patch v4.5.0+incompatible
+go: downloading k8s.io/api v0.17.2
+go: downloading k8s.io/apiextensions-apiserver v0.17.2
+go: downloading github.com/prometheus/client_model v0.0.0-20190129233127-fd36f4220a90
+go: downloading github.com/prometheus/common v0.4.1
+go: downloading github.com/gogo/protobuf v1.2.2-0.20190723190241-65acae22fc9d
+go: downloading github.com/google/gofuzz v1.0.0
+go: downloading github.com/beorn7/perks v1.0.0
+go: downloading github.com/golang/protobuf v1.3.2
+go: downloading github.com/prometheus/procfs v0.0.2
+go: downloading golang.org/x/sys v0.0.0-20190826190057-c7b8b68b1456
+go: downloading gopkg.in/fsnotify.v1 v1.4.7
+go: downloading github.com/googleapis/gnostic v0.3.1
+go: downloading github.com/golang/groupcache v0.0.0-20180513044358-24b0969c4cb7
+go: downloading github.com/imdario/mergo v0.3.6
+go: downloading golang.org/x/crypto v0.0.0-20190820162420-60c769a6c586
+go: downloading golang.org/x/net v0.0.0-20191004110552-13f9640d40b9
+go: downloading github.com/json-iterator/go v1.1.8
+go: downloading k8s.io/utils v0.0.0-20191114184206-e782cd3c129f
+go: downloading github.com/matttproud/golang_protobuf_extensions v1.0.1
+go: downloading k8s.io/kube-openapi v0.0.0-20191107075043-30be4d16710a
+go: downloading golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
+go: downloading github.com/hashicorp/golang-lru v0.5.1
+go: downloading github.com/google/go-cmp v0.3.0
+go: downloading gopkg.in/yaml.v2 v2.2.4
+go: downloading google.golang.org/appengine v1.5.0
+go: downloading golang.org/x/text v0.3.2
+go: downloading github.com/evanphx/json-patch v0.5.2
+go: downloading k8s.io/client-go v1.5.2
+Update go.mod:
+$ go mod tidy
+go: downloading github.com/go-logr/zapr v0.1.0
+go: downloading go.uber.org/zap v1.10.0
+go: downloading github.com/onsi/ginkgo v1.11.0
+go: downloading github.com/onsi/gomega v1.8.1
+go: downloading github.com/stretchr/testify v1.4.0
+go: downloading cloud.google.com/go v0.38.0
+go: downloading gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127
+go: downloading github.com/fsnotify/fsnotify v1.4.7
+go: downloading go.uber.org/atomic v1.3.2
+go: downloading go.uber.org/multierr v1.1.0
+go: downloading github.com/kr/pretty v0.1.0
+go: downloading github.com/kr/text v0.1.0
+go: downloading github.com/pmezard/go-difflib v1.0.0
+go: downloading golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7
+go: downloading github.com/hpcloud/tail v1.0.0
+Running make:
+$ make
+go: creating new go.mod: module tmp
+go: downloading sigs.k8s.io/controller-tools v0.2.5
+go: downloading github.com/spf13/cobra v0.0.5
+go: downloading k8s.io/api v0.17.0
+go: downloading k8s.io/apimachinery v0.17.0
+go: downloading gopkg.in/yaml.v3 v3.0.0-20190905181640-827449938966
+go: downloading k8s.io/apiextensions-apiserver v0.17.0
+go: downloading github.com/fatih/color v1.7.0
+go: downloading golang.org/x/tools v0.0.0-20190920225731-5eefd052ad72
+go: downloading github.com/gobuffalo/flect v0.2.0
+go: downloading github.com/mattn/go-isatty v0.0.8
+go: downloading github.com/mattn/go-colorable v0.1.2
+go get: added sigs.k8s.io/controller-tools v0.2.5
+/Users/huzhi/go/bin/controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..."
+go fmt ./...
+go vet ./...
+go build -o bin/manager main.go
+Next: define a resource with:
+$ kubebuilder create api
+
+
+
+
+localhost:first-kubebuilder huzhi$ cat main.go | grep "example.org"
+		LeaderElectionID:   "cc028f55.example.org",
+localhost:first-kubebuilder huzhi$
+localhost:first-kubebuilder huzhi$ cat PROJECT | grep "example.org"
+domain: example.org
+localhost:first-kubebuilder huzhi$
+localhost:first-kubebuilder huzhi$
+
+
+localhost:first-kubebuilder huzhi$ cat main.go | grep "The Kubernetes authors"
+Copyright 2021 The Kubernetes authors.
+localhost:first-kubebuilder huzhi$
+localhost:first-kubebuilder huzhi$ cat hack/boilerplate.go.txt | grep "The Kubernetes authors"
+Copyright 2021 The Kubernetes authors.
+localhost:first-kubebuilder huzhi$
+localhost:first-kubebuilder huzhi$
+
+
+
+$ ll
+total 136
+drwxr-xr-x  12 huzhi  staff    384  5 13 15:03 ./
+drwxr-xr-x   6 huzhi  staff    192  5 13 15:02 ../
+-rw-------   1 huzhi  staff    357  5 13 15:02 .gitignore
+-rw-------   1 huzhi  staff    795  5 13 15:02 Dockerfile
+-rw-------   1 huzhi  staff   2069  5 13 15:02 Makefile
+-rw-------   1 huzhi  staff     76  5 13 15:02 PROJECT
+drwxr-xr-x   3 huzhi  staff     96  5 13 15:03 bin/
+drwx------   8 huzhi  staff    256  5 13 15:02 config/
+-rw-r--r--   1 huzhi  staff    160  5 13 15:03 go.mod
+-rw-r--r--   1 huzhi  staff  44135  5 13 15:03 go.sum
+drwx------   3 huzhi  staff     96  5 13 15:02 hack/
+-rw-------   1 huzhi  staff   2006  5 13 15:02 main.go
+$
+$ tree -a .
+.
+├── .gitignore
+├── Dockerfile
+├── Makefile
+├── PROJECT
+├── bin
+│   └── manager
+├── config
+│   ├── certmanager
+│   │   ├── certificate.yaml
+│   │   ├── kustomization.yaml
+│   │   └── kustomizeconfig.yaml
+│   ├── default
+│   │   ├── kustomization.yaml
+│   │   ├── manager_auth_proxy_patch.yaml
+│   │   ├── manager_webhook_patch.yaml
+│   │   └── webhookcainjection_patch.yaml
+│   ├── manager
+│   │   ├── kustomization.yaml
+│   │   └── manager.yaml
+│   ├── prometheus
+│   │   ├── kustomization.yaml
+│   │   └── monitor.yaml
+│   ├── rbac
+│   │   ├── auth_proxy_client_clusterrole.yaml
+│   │   ├── auth_proxy_role.yaml
+│   │   ├── auth_proxy_role_binding.yaml
+│   │   ├── auth_proxy_service.yaml
+│   │   ├── kustomization.yaml
+│   │   ├── leader_election_role.yaml
+│   │   ├── leader_election_role_binding.yaml
+│   │   └── role_binding.yaml
+│   └── webhook
+│       ├── kustomization.yaml
+│       ├── kustomizeconfig.yaml
+│       └── service.yaml
+├── go.mod
+├── go.sum
+├── hack
+│   └── boilerplate.go.txt
+└── main.go
+
+9 directories, 31 files
+$
+
+
+git init .
+git add .
+git config user.email "hzhilamp@163.com"
+git config user.name "lanzhiwang"
+git commit -m "init"
+git status

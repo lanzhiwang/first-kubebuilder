@@ -1,0 +1,31 @@
+debug: controller-gen
+	$(warning IMG: $(IMG))
+	$(warning CRD_OPTIONS: $(CRD_OPTIONS))
+	$(warning CONTROLLER_GEN: $(CONTROLLER_GEN))
+	$(warning GOBIN: $(GOBIN))
+
+
+$ IMG=controller:v1.0.0 CRD_OPTIONS="crd:trivialVersions=false" make debug
+Makefile:83: IMG: controller:v1.0.0
+Makefile:83: CRD_OPTIONS: crd:trivialVersions=false
+Makefile:83: CONTROLLER_GEN: /Users/huzhi/go/bin/controller-gen
+Makefile:83: GOBIN: /Users/huzhi/go/bin
+make: `debug' is up to date.
+$
+
+
+$ IMG=controller:v1.0.0 CRD_OPTIONS="crd:trivialVersions=false" make all -n
+/Users/huzhi/go/bin/controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..."
+go fmt ./...
+go vet ./...
+go build -o bin/manager main.go
+$
+
+$ IMG=controller:v1.0.0 CRD_OPTIONS="crd:trivialVersions=false" make manifests -n
+/Users/huzhi/go/bin/controller-gen crd:trivialVersions=false rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+
+$ IMG=controller:v1.0.0 CRD_OPTIONS="crd:trivialVersions=false" make deploy -n
+/Users/huzhi/go/bin/controller-gen crd:trivialVersions=false rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+cd config/manager && kustomize edit set image controller=controller:v1.0.0
+kustomize build config/default | kubectl apply -f -
+

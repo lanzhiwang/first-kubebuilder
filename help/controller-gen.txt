@@ -1,0 +1,188 @@
+$ controller-gen --help
+Generate Kubernetes API extension resources and code.
+
+Usage:
+  controller-gen [flags]
+
+Examples:
+	# Generate RBAC manifests and crds for all types under apis/,
+	# outputting crds to /tmp/crds and everything else to stdout
+	controller-gen rbac:roleName=<role name> crd paths=./apis/... output:crd:dir=/tmp/crds output:stdout
+
+	# Generate deepcopy/runtime.Object implementations for a particular file
+	controller-gen object paths=./apis/v1beta1/some_types.go
+
+	# Generate OpenAPI v3 schemas for API packages and merge them into existing CRD manifests
+	controller-gen schemapatch:manifests=./manifests output:dir=./manifests paths=./pkg/apis/...
+
+	# Run all the generators for a given project
+	controller-gen paths=./apis/...
+
+	# Explain the markers for generating CRDs, and their arguments
+	controller-gen crd -ww
+
+
+Flags:
+  -h, --detailed-help count   print out more detailed help
+                              (up to -hhh for the most detailed output, or -hhhh for json output)
+      --help                  print out usage and a summary of options
+      --version               show version
+  -w, --which-markers count   print out all markers available with the requested generators
+                              (up to -www for the most detailed output, or -wwww for json output)
+
+
+Options
+
+
+generators
+
++webhook                                                                                                  package  generates (partial) {Mutating,Validating}WebhookConfiguration objects.
+
++schemapatch:manifests=<string>[,maxDescLen=<int>]                                                        package  patches existing CRDs with new schemata.
+
++rbac:roleName=<string>                                                                                   package  generates ClusterRole objects.
+
++object[:headerFile=<string>][,year=<string>]                                                             package  generates code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+
++crd[:crdVersions=<[]string>][,maxDescLen=<int>][,preserveUnknownFields=<bool>][,trivialVersions=<bool>]  package  generates CustomResourceDefinition objects.
+
+
+generic
+
++paths=<[]string>  package  represents paths and go-style path patterns to use as package roots.
+
+
+output rules (optionally as output:<generator>:...)
+
++output:artifacts[:code=<string>],config=<string>  package  outputs artifacts to different locations, depending on whether they're package-associated or not.
+
++output:dir=<string>                               package  outputs each artifact to the given directory, regardless of if it's package-associated or not.
+
++output:none                                       package  skips outputting anything.
+
++output:stdout                                     package  outputs everything to standard-out, with no separation.
+
+$
+
+
+$ controller-gen -hhh
+Usage:
+  controller-gen [flags]
+
+Examples:
+	# Generate RBAC manifests and crds for all types under apis/,
+	# outputting crds to /tmp/crds and everything else to stdout
+	controller-gen rbac:roleName=<role name> crd paths=./apis/... output:crd:dir=/tmp/crds output:stdout
+
+	# Generate deepcopy/runtime.Object implementations for a particular file
+	controller-gen object paths=./apis/v1beta1/some_types.go
+
+	# Generate OpenAPI v3 schemas for API packages and merge them into existing CRD manifests
+	controller-gen schemapatch:manifests=./manifests output:dir=./manifests paths=./pkg/apis/...
+
+	# Run all the generators for a given project
+	controller-gen paths=./apis/...
+
+	# Explain the markers for generating CRDs, and their arguments
+	controller-gen crd -ww
+
+
+Flags:
+  -h, --detailed-help count   print out more detailed help
+                              (up to -hhh for the most detailed output, or -hhhh for json output)
+      --help                  print out usage and a summary of options
+      --version               show version
+  -w, --which-markers count   print out all markers available with the requested generators
+                              (up to -www for the most detailed output, or -wwww for json output)
+
+
+Options
+
+
+generators
+
+
++webhook package
+	generates (partial) {Mutating,Validating}WebhookConfiguration objects.
+
++schemapatch package
+	patches existing CRDs with new schemata.
+	For legacy (v1beta1) single-version CRDs, it will simply replace the global schema.
+	 For legacy (v1beta1) multi-version CRDs, and any v1 CRDs, it will replace schemata of existing versions and *clear the schema* from any versions not specified in the Go code.  It will *not* add new versions, or remove old ones.
+	 For legacy multi-version CRDs with identical schemata, it will take care of lifting the per-version schema up to the global schema.
+	 It will generate output for each "CRD Version" (API version of the CRD type itself) , e.g. apiextensions/v1beta1 and apiextensions/v1) available.
+
+	manifests=<string>
+		contains the CustomResourceDefinition YAML files.
+	[maxDescLen=<int>]
+		specifies the maximum description length for fields in CRD's OpenAPI schema.
+		0 indicates drop the description for all fields completely. n indicates limit the description to at most n characters and truncate the description to closest sentence boundary if it exceeds n characters.
+
+
++rbac package
+	generates ClusterRole objects.
+
+	roleName=<string>
+		sets the name of the generated ClusterRole.
+
++object package
+	generates code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
+
+	[headerFile=<string>]
+		specifies the header text (e.g. license) to prepend to generated files.
+	[year=<string>]
+		specifies the year to substitute for " YEAR" in the header file.
+
++crd package
+	generates CustomResourceDefinition objects.
+
+	[crdVersions=<[]string>]
+		specifies the target API versions of the CRD type itself to generate.  Defaults to v1beta1.
+		The first version listed will be assumed to be the "default" version and will not get a version suffix in the output filename.
+		 You'll need to use "v1" to get support for features like defaulting, along with an API server that supports it (Kubernetes 1.16+).
+
+	[maxDescLen=<int>]
+		specifies the maximum description length for fields in CRD's OpenAPI schema.
+		0 indicates drop the description for all fields completely. n indicates limit the description to at most n characters and truncate the description to closest sentence boundary if it exceeds n characters.
+
+	[preserveUnknownFields=<bool>]
+		indicates whether or not we should turn off pruning.
+		Left unspecified, it'll default to true when only a v1beta1 CRD is generated (to preserve compatibility with older versions of this tool), or false otherwise.
+		 It's required to be false for v1 CRDs.
+
+	[trivialVersions=<bool>]
+		indicates that we should produce a single-version CRD.
+		Single "trivial-version" CRDs are compatible with older (pre 1.13) Kubernetes API servers.  The storage version's schema will be used as the CRD's schema.
+		 Only works with the v1beta1 CRD version.
+
+
+generic
+
+
++paths package
+	=<[]string>  represents paths and go-style path patterns to use as package roots.
+
+output rules (optionally as output:<generator>:...)
+
+
++output:artifacts package
+	outputs artifacts to different locations, depending on whether they're package-associated or not.
+	Non-package associated artifacts are output to the Config directory, while package-associated ones are output to their package's source files' directory, unless an alternate path is specified in Code.
+
+	[code=<string>]
+		overrides the directory in which to write new code (defaults to where the existing code lives).
+	config=<string>
+		points to the directory to which to write configuration.
+
++output:dir package
+	=<string>  outputs each artifact to the given directory, regardless of if it's package-associated or not.
+
++output:none package
+	skips outputting anything.
+
++output:stdout package
+	outputs everything to standard-out, with no separation.
+	Generally useful for single-artifact outputs.
+localhost:first-operator huzhi$
+
+

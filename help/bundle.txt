@@ -1,0 +1,205 @@
+localhost:first-operator huzhi$ make -f Makefile_01 bundle -n
+{ \
+	set -e ;\
+	CONTROLLER_GEN_TMP_DIR=$(mktemp -d) ;\
+	cd $CONTROLLER_GEN_TMP_DIR ;\
+	go mod init tmp ;\
+	go get sigs.k8s.io/controller-tools/cmd/controller-gen@v0.3.0 ;\
+	rm -rf $CONTROLLER_GEN_TMP_DIR ;\
+	}
+/Users/huzhi/go/bin/controller-gen "crd:trivialVersions=true" rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+{ \
+	set -e ;\
+	KUSTOMIZE_GEN_TMP_DIR=$(mktemp -d) ;\
+	cd $KUSTOMIZE_GEN_TMP_DIR ;\
+	go mod init tmp ;\
+	go get sigs.k8s.io/kustomize/kustomize/v3@v3.5.4 ;\
+	rm -rf $KUSTOMIZE_GEN_TMP_DIR ;\
+	}
+operator-sdk generate kustomize manifests -q
+cd config/manager && /Users/huzhi/go/bin/kustomize edit set image controller=controller:latest
+/Users/huzhi/go/bin/kustomize build config/manifests | operator-sdk generate bundle -q --overwrite --version 0.0.1
+operator-sdk bundle validate ./bundle
+localhost:first-operator huzhi$
+
+
+
+
+
+localhost:first-operator huzhi$ /Users/huzhi/go/bin/controller-gen "crd:trivialVersions=true" rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	config/crd/bases/
+	config/rbac/role.yaml
+
+nothing added to commit but untracked files present (use "git add" to track)
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git add .
+localhost:first-operator huzhi$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   config/crd/bases/ship.example.org_frigates.yaml
+	new file:   config/crd/bases/ship.example.org_kafkas.yaml
+	new file:   config/rbac/role.yaml
+
+localhost:first-operator huzhi$ git commit -m "controller-gen"
+[master b1568a2] controller-gen
+ 3 files changed, 160 insertions(+)
+ create mode 100644 config/crd/bases/ship.example.org_frigates.yaml
+ create mode 100644 config/crd/bases/ship.example.org_kafkas.yaml
+ create mode 100644 config/rbac/role.yaml
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git status
+On branch master
+nothing to commit, working tree clean
+localhost:first-operator huzhi$
+
+
+
+
+localhost:first-operator huzhi$ operator-sdk generate kustomize manifests -q
+
+Display name for the operator (required):
+> first-operator
+
+Description for the operator (required):
+> first operator description
+
+Provider's name for the operator (required):
+> huzhi
+
+Any relevant URL for the provider name (optional):
+> github.com/lanzhiwang/first-operator
+
+Comma-separated list of keywords for your operator (required):
+> kafka
+
+Comma-separated list of maintainers and their emails (e.g. 'name1:email1, name2:email2') (required):
+> hzhilamp@163.com
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	config/manifests/
+
+nothing added to commit but untracked files present (use "git add" to track)
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git add .
+localhost:first-operator huzhi$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	new file:   config/manifests/bases/first-operator.clusterserviceversion.yaml
+	new file:   config/manifests/kustomization.yaml
+
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git commit -m "add manifests"
+[master 56ba69e] add manifests
+ 2 files changed, 43 insertions(+)
+ create mode 100644 config/manifests/bases/first-operator.clusterserviceversion.yaml
+ create mode 100644 config/manifests/kustomization.yaml
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git status
+On branch master
+nothing to commit, working tree clean
+localhost:first-operator huzhi$
+
+
+
+
+
+
+localhost:first-operator huzhi$ cd config/manager && /Users/huzhi/go/bin/kustomize edit set image controller=controller:latest
+localhost:manager huzhi$ pwd
+/Users/huzhi/work/code/go_code/rds/first-operator/config/manager
+localhost:manager huzhi$
+localhost:manager huzhi$ cd ../../
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ pwd
+/Users/huzhi/work/code/go_code/rds/first-operator
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   config/manager/kustomization.yaml
+
+no changes added to commit (use "git add" and/or "git commit -a")
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git diff config/manager/kustomization.yaml
+diff --git a/config/manager/kustomization.yaml b/config/manager/kustomization.yaml
+index 5c5f0b8..ad13e96 100644
+--- a/config/manager/kustomization.yaml
++++ b/config/manager/kustomization.yaml
+@@ -1,2 +1,8 @@
+ resources:
+ - manager.yaml
++apiVersion: kustomize.config.k8s.io/v1beta1
++kind: Kustomization
++images:
++- name: controller
++  newName: controller
++  newTag: latest
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git add .
+localhost:first-operator huzhi$ git commit -m "edit image tag"
+[master 4a25985] edit image tag
+ 1 file changed, 6 insertions(+)
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$
+
+
+
+
+localhost:first-operator huzhi$ /Users/huzhi/go/bin/kustomize build config/manifests | operator-sdk generate bundle -q --overwrite --version 0.0.1
+Error: accumulating resources: couldn't make target for path '/Users/huzhi/work/code/go_code/rds/first-operator/config/samples': unable to find one of 'kustomization.yaml', 'kustomization.yml' or 'Kustomization' in directory '/Users/huzhi/work/code/go_code/rds/first-operator/config/samples'
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	bundle.Dockerfile
+	bundle/
+
+nothing added to commit but untracked files present (use "git add" to track)
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git add .
+localhost:first-operator huzhi$ git commit -m "bundle"
+[master d512277] bundle
+ 3 files changed, 75 insertions(+)
+ create mode 100644 bundle.Dockerfile
+ create mode 100644 bundle/manifests/first-operator.clusterserviceversion.yaml
+ create mode 100644 bundle/metadata/annotations.yaml
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git status
+On branch master
+nothing to commit, working tree clean
+localhost:first-operator huzhi$
+
+
+
+localhost:first-operator huzhi$ operator-sdk bundle validate ./bundle
+INFO[0000] Found annotations file                        bundle-dir=bundle container-tool=docker
+INFO[0000] Could not find optional dependencies file     bundle-dir=bundle container-tool=docker
+INFO[0000] All validation tests have completed successfully
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$
+localhost:first-operator huzhi$ git status
+On branch master
+nothing to commit, working tree clean
+localhost:first-operator huzhi$
+
+
+
+
+
