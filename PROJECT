@@ -4,4 +4,7 @@ resources:
 - group: ship
   kind: Frigate
   version: v1beta1
+- group: ship
+  kind: Kafka
+  version: v1beta1
 version: "2"
