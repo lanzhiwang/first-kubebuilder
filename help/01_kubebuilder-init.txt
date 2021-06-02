@@ -17,7 +17,7 @@ Usage:
   kubebuilder init [flags]
 
 Examples:
-# Scaffold a project using the apache2 license with "The Kubernetes authors" as owners
+# Scaffold 脚手架 a project using the apache2 license with "The Kubernetes authors" as owners
 kubebuilder init --domain example.org --license apache2 --owner "The Kubernetes authors"
 
 
@@ -60,7 +60,7 @@ drwxr-xr-x  6 huzhi  staff  192  5 13 15:02 ../
 -rw-r--r--  1 huzhi  staff   53  5 13 15:02 go.mod
 
 $ kubebuilder init --domain example.org --license apache2 --owner "The Kubernetes authors"
-Writing scaffold for you to edit...
+Writing scaffold 脚手架 for you to edit...
 Get controller runtime:
 $ go get sigs.k8s.io/controller-runtime@v0.5.0
 go: downloading sigs.k8s.io/controller-runtime v0.5.0
