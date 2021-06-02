@@ -47,7 +47,7 @@ Examples:
 Flags:
       --controller       if set, generate the controller without prompting the user (default true)
       --example          if true an example reconcile body should be written while scaffolding a resource. (default true)
-      --force            attempt to create resource even if it already exists
+      --force            attempt to create resource even if it already exists 尝试创建资源，即使它已经存在
       --group string     resource Group
   -h, --help             help for api
       --kind string      resource Kind
@@ -446,18 +446,3 @@ index b14390a..eb752d6 100644
 
         setupLog.Info("starting manager")
 localhost:first-operator huzhi$
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
